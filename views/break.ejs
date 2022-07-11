@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+    body{
+        
+       
+        text-align: center;
+    }
+    .timer{
+        margin-top: 5vh;
+    }
+    .btn{
+        margin: 5px;
+    }
+    body {
+        color: white;
+        background-repeat: no-repeat;
+        background-size: cover;
+  display: flex;
+  align-items: center;
+  background-image: url('https://images.pexels.com/photos/2387793/pexels-photo-2387793.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  justify-content: center;
+  height: 100vh;
+  /* background: #D9D7DD; */
+}
+
+.clock {
+  margin-left:100px;
+  border-radius: 100%;
+  background: #ffffff;
+  font-family: "Montserrat";
+  border: 5px solid white;
+  box-shadow: inset 2px 3px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.wrap {
+  overflow: hidden;
+  position: relative;
+  width: 350px;
+  height: 350px;
+  border-radius: 100%;
+}
+
+.minute,
+.hour {
+  position: absolute;
+  height: 100px;
+  width: 6px;
+  margin: auto;
+  top: -27%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: black;
+  transform-origin: bottom center;
+  transform: rotate(0deg);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.minute {
+  position: absolute;
+  height: 130px;
+  width: 4px;
+  top: -38%;
+  left: 0;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+  transform: rotate(90deg);
+}
+
+.second {
+  position: absolute;
+  height: 90px;
+  width: 2px;
+  margin: auto;
+  top: -26%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 4px;
+  background: #FF4B3E;
+  transform-origin: bottom center;
+  transform: rotate(180deg);
+  z-index: 1;
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 100px;
+  background: white;
+  border: 2px solid #1b1b1b;
+  border-radius: 100px;
+  margin: auto;
+  z-index: 1;
+}
+</style>
+    <title>Break Report</title>
+</head>
+
+<body>
+<div class="timer">
+    <h1 style="font-family: 'Permanent Marker', cursive;">Time is precious make every <br> second count</h1>
+    <h1 style="font-family: 'Staatliches', cursive;"> <span id="hour">00</span> hour <span id="min">00</span> min <span id="sec">00</span> s </h1>
+    <form action="/stopTimerDate" method="post">
+        <input style="visibility: hidden;height:0;width:0;padding:0;margin:0;float:right;" type="text" required id="startDate" name="startDate">
+        <input style="visibility: hidden;height:0;width:0;padding:0;margin:0;float:right;" type="text" required id="stopDate" name="stopDate">
+        <input style="visibility: hidden;height:0;width:0;padding:0;margin:0;float:right;" type="text" required id="totalTime" name="totalTime">
+
+        <button class="btn btn-success" type="button" onclick="startTimer(); this.onclick=null;">Start</button>
+        <button class="btn btn-danger" onclick="stopTimer();this.onclick=null;">Stop</button>
+        <button class="btn btn-primary" type="button" onClick="window.location.reload();">Clear</button>
+    </form>
+</div>
+<div class="clock">
+    <div class="wrap">
+      <span class="hour"></span>
+      <span class="minute"></span>
+      <span class="second"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+    <script type="text/javascript">
+        var inc = 1000;
+
+clock();
+
+function clock() {
+  const date = new Date();
+
+  const hours = ((date.getHours() + 11) % 12 + 1);
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  
+  const hour = hours * 30;
+  const minute = minutes * 6;
+  const second = seconds * 6;
+  
+  document.querySelector('.hour').style.transform = `rotate(${hour}deg)`
+  document.querySelector('.minute').style.transform = `rotate(${minute}deg)`
+  document.querySelector('.second').style.transform = `rotate(${second}deg)`
+}
+
+setInterval(clock, inc);
+
+
+        const secondRender = document.querySelector('#sec')
+        const minRender = document.querySelector('#min')
+        const hourRender = document.querySelector('#hour')
+        const startDate = document.querySelector('#startDate')
+        const stopDate = document.querySelector('#stopDate')
+        const totalTime = document.querySelector('#totalTime')
+        let timerHour = 0
+        let timerMinute = 0
+        let timerSecond = 0
+
+        function startTimer() {
+            sec = window.setInterval(secInterval, 1000)
+            min = window.setInterval(minInterval, 1000 * 60)
+            hou = window.setInterval(houInterval, 1000 * 60 * 60)
+            let currentDate = new Date()
+            startDate.value = currentDate
+        }
+
+        function secInterval() {
+            if (timerSecond == 59) {
+                timerSecond = 0
+                secondRender.innerHTML = "0" + timerSecond
+            }
+            else if (timerSecond < 9) {
+                timerSecond++
+                secondRender.innerHTML = "0" + timerSecond
+            }
+            else {
+                timerSecond++
+                secondRender.innerHTML = timerSecond
+            }
+
+        }
+
+        function minInterval() {
+            if (timerMinute == 59) {
+                timerMinute = 0
+            } else {
+                if (timerMinute < 9) {
+                    timerMinute++
+                    minRender.innerHTML = "0" + timerMinute
+                } else {
+                    timerMinute++
+                    minRender.innerHTML = timerMinute
+                }
+            }
+
+        }
+        function houInterval() {
+            timerHour += 1
+
+        }
+
+        const stopTimer = () => {
+
+
+
+            totalTime.value = hourRender.innerHTML + ":" + minRender.innerHTML + ":" + secondRender.innerHTML
+            let currentDate = new Date()
+            stopDate.value = currentDate
+            window.clearInterval(sec)
+            window.clearInterval(min)
+            window.clearInterval(hou)
+
+        }
+    </script>
+</body>
+
+</html>
